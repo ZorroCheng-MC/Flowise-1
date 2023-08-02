@@ -7,6 +7,7 @@ import { ConsoleCallbackHandler, CustomChainHandler } from '../../../src/handler
 class LLMChain_Chains implements INode {
     label: string
     name: string
+    version: number
     type: string
     icon: string
     category: string
@@ -18,6 +19,7 @@ class LLMChain_Chains implements INode {
     constructor() {
         this.label = 'LLM Chain'
         this.name = 'llmChain'
+        this.version = 1.0
         this.type = 'LLMChain'
         this.icon = 'chain.svg'
         this.category = 'Chains'
@@ -114,16 +116,7 @@ const runPrediction = async (
      */
     const promptValues = handleEscapeCharacters(promptValuesRaw, true)
 
-    if (inputVariables.length === 1) {
-        if (isStreaming) {
-            const handler = new CustomChainHandler(socketIO, socketIOClientId)
-            const res = await chain.run(input, [loggerHandler, handler])
-            return res
-        } else {
-            const res = await chain.run(input, [loggerHandler])
-            return res
-        }
-    } else if (inputVariables.length > 1) {
+    if (promptValues && inputVariables.length > 0) {
         let seen: string[] = []
 
         for (const variable of inputVariables) {
